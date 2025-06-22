@@ -1,0 +1,8 @@
+npm init -y
+npm i express
+npm i mongoose dotenv cors
+npm install --save-dev nodemon
+npm i cloudinary
+npm i bcryptjs
+npm i jsonwebtoken
+npm i multer
