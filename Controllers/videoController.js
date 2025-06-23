@@ -66,13 +66,23 @@ export const uploadVideo = async (req, res) => {
 export const getVideos = async (req, res) => {
     try {
         const title = req.headers.title || ""
+
+        const page = req.headers.page || 1
+        const ITEM_PER_PAGE = 4
+        const skip = (page - 1) * ITEM_PER_PAGE
+
         const query = { title: { $regex: title, $options: "i" }, user: req.userId }
-        const allVideos = await video.find(query)
+        const totalDocs = await video.countDocuments(query)
+        const pageCount = Math.ceil(totalDocs / ITEM_PER_PAGE)
+
+        const allVideos = await video.find(query).skip(skip).limit(ITEM_PER_PAGE)
 
         return res.status(200).json({
             message: "All videos fetched successfully!",
 
-            allVideos
+            allVideos,
+            pageCount,
+            totalDocs
         })
     } catch (error) {
         return res.status(500).json({ message: error.message })
